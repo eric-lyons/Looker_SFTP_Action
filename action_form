@@ -1,0 +1,33 @@
+import json
+import os
+from flask import Response
+import base64
+import tempfile
+import pandas as pd
+import zlib
+import os
+import io, zipfile, json
+from pandas import ExcelWriter
+
+
+
+
+# https://github.com/looker-open-source/actions/blob/master/docs/action_api.md#action-form-endpoint
+def action_form(request):
+    """Return form endpoint data for action"""
+
+    request_json = request.get_json()
+    form_params = request_json['form_params']
+    print(form_params)
+
+    response = [
+        {"name": "filename", "label": "filename", "type": "string", "required":True},
+        {"name": "host", "label": "host", "type": "string", "required":True},
+        {"name": "username", "label": "username", "type": "string", "required": True},
+        {"name": "port", "label": "port", "type": "string" , "required": True}
+      ]
+
+
+    print('returning form json: {}'.format(json.dumps(response)))
+    return Response(json.dumps(response), status=200, mimetype='application/json')
+
