@@ -1,0 +1,33 @@
+import json
+import os
+from flask import Response
+from icon import icon_data_uri
+import base64
+import tempfile
+import pandas as pd
+import zlib
+import os
+import io, zipfile, json
+from pandas import ExcelWriter
+
+
+def action_list(request):
+    """Return action hub list endpoint data for action"""
+
+    response = {
+        'label': 'Secure SFTP',
+        'integrations': [{
+            'name': 'SecureSFTP',
+            'label': 'SecureSFTP',
+            "icon_data_uri": icon_data_uri,
+            'form_url': 'URL/action_form',
+            'url': 'URL/action_execute',
+            'supported_action_types': ['dashboard'],
+            'supported_download_settings': ['url'],
+            'supported_formats': ['csv_zip'],
+            'supported_formattings': ['unformatted']
+        }]
+    }
+
+    print('returning integrations json')
+    return Response(json.dumps(response), status=200, mimetype='application/json')
