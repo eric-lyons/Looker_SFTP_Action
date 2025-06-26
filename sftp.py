@@ -54,8 +54,7 @@ def upload_file_sftp(
                     # Explicitly try loading as common key types
                     key_classes_to_try = [
                         paramiko.Ed25519Key,
-                        paramiko.RSAKey,
-                        paramiko.ECDSAKey,
+                        paramiko.ECDSAKey
                         # paramiko.DSSKey, # DSS is older and sometimes problematic; add if needed
                     ]
                     
