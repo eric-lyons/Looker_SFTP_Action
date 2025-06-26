@@ -140,12 +140,15 @@ gcloud functions deploy YOUR_ACTION_LIST_FUNCTION_NAME \
   --trigger-http \
   --allow-unauthenticated \
   --entry-point=action_list # Verify this entry point from the Python source
+```
 
 Make a note of the HTTPS Trigger URL for this function.
 
 #### B. action_form Function
 This function provides Looker with the form fields needed to configure the SFTP action (e.g., hostname, username, path).
 
+
+```bash
 # Navigate to the directory containing the action_form function code
 # cd path/to/looker_sftp_action/action_form_function_directory
 
@@ -156,12 +159,14 @@ gcloud functions deploy YOUR_ACTION_FORM_FUNCTION_NAME \
   --trigger-http \
   --allow-unauthenticated \
   --entry-point=action_form # Verify this entry point from the Python source
+```
 
 #### C. action_execute Function
 This function handles the actual data transfer to SFTP.
 # Navigate to the directory containing the action_execute function code
 # cd path/to/looker_sftp_action/action_execute_function_directory
 
+```bash
 gcloud functions deploy YOUR_ACTION_EXECUTE_FUNCTION_NAME \
   --project=YOUR_PROJECT_ID \
   --region=YOUR_REGION \
@@ -172,6 +177,7 @@ gcloud functions deploy YOUR_ACTION_EXECUTE_FUNCTION_NAME \
   --set-env-vars=SFTP_SECRET_RESOURCE_ID="projects/YOUR_PROJECT_ID/secrets/YOUR_SECRET_NAME/versions/latest"
   # Optional: For request verification from Looker
   # --set-env-vars=LOOKER_ACTION_HUB_SECRET="your-strong-secret-for-verification"
+```
 
 # Grant the Cloud Function's service account permission to access the secret
 # 1. Find the service account for your deployed function:
