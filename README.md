@@ -121,9 +121,10 @@ You will deploy three separate Cloud Functions. Clone this repository and naviga
 
 **Common parameters for `gcloud functions deploy`:**
 *   `YOUR_FUNCTION_NAME`: A unique name for your Cloud Function (e.g., `looker-sftp-list`, `looker-sftp-form`, `looker-sftp-execute`).
-*   `YOUR_PROJECT_ID`: Your Google Cloud Project ID.
-*   `YOUR_REGION`: The GCP region for deployment (e.g., `us-central1`).
-*   `PYTHON_RUNTIME`: e.g., `python311`, `python312`.
+*   `export PROJECT_ID`: Your Google Cloud Project ID.
+*   `export YOUR_REGION=us-central1`: The GCP region for deployment (e.g., `us-central1`).
+*   `export PYTHON_RUNTIME=python3111`: e.g., `python311`, `python312`.
+*   `export PROJECT_NUMBER=$(gcloud projects describe YOUR_PROJECT_ID --format="value(projectNumber)")`
 
 ### A. `action_list` Function
 
