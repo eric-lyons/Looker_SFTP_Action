@@ -125,7 +125,7 @@ You will deploy three separate Cloud Functions. Clone this repository and naviga
 *   `YOUR_REGION`: The GCP region for deployment (e.g., `us-central1`).
 *   `PYTHON_RUNTIME`: e.g., `python39`, `python310`, `python311`.
 
-#### A. `action_list` Function
+### A. `action_list` Function
 
 This function tells Looker about the existence of your action.
 
@@ -144,7 +144,7 @@ gcloud functions deploy YOUR_ACTION_LIST_FUNCTION_NAME \
 
 Make a note of the HTTPS Trigger URL for this function.
 
-#### B. action_form Function
+### B. action_form Function
 This function provides Looker with the form fields needed to configure the SFTP action (e.g., hostname, username, path).
 
 
@@ -160,8 +160,7 @@ gcloud functions deploy YOUR_ACTION_FORM_FUNCTION_NAME \
   --allow-unauthenticated \
   --entry-point=action_form # Verify this entry point from the Python source
 ```
-
-#### C. action_execute Function
+### C. action_execute Function
 This function handles the actual data transfer to SFTP.
 # Navigate to the directory containing the action_execute function code
 # cd path/to/looker_sftp_action/action_execute_function_directory
@@ -189,10 +188,13 @@ gcloud functions deploy YOUR_ACTION_EXECUTE_FUNCTION_NAME \
 #    Let's call this FUNCTION_SERVICE_ACCOUNT_EMAIL
 
 # 2. Grant permission:
+
+```bash
 gcloud secrets add-iam-policy-binding YOUR_SECRET_NAME \
   --member="serviceAccount:FUNCTION_SERVICE_ACCOUNT_EMAIL" \
   --role="roles/secretmanager.secretAccessor" \
   --project=YOUR_PROJECT_ID
+```
 
 # 4. Add Action to Looker
 In Looker, go to Admin > Platform > Actions.
@@ -201,6 +203,7 @@ Action Hub URL: Enter the HTTPS Trigger URL of your action_list Cloud Function.
 Authorization Token (Optional): If you set the LOOKER_ACTION_HUB_SECRET environment variable on your Cloud Functions, enter the same secret value here. This helps ensure that only Looker can call your action functions.
 Click "Add Action Hub".
 Your new SFTP action should now appear in the list of actions. If it's not enabled by default, enable it.
+
 # Usage
 Once the action is set up and enabled in Looker:
 From a Look or a Dashboard, click the gear icon and choose "Send..." or "Schedule...".
@@ -214,8 +217,10 @@ Filename: The desired filename (you can use Looker's filename templating).
 Configure format, filters, and schedule settings as needed.
 Click "Send" or "Save".
 Looker will then trigger the action_execute Cloud Function, which will retrieve the key, connect to the SFTP server and transfer the file.
+
 # Troubleshooting
 Check Cloud Function Logs: If deliveries fail, the first place to check is the logs for your action_execute Cloud Function in Google Cloud Logging.
+
 # Permissions:
 Ensure the action_execute function's service account has the roles/secretmanager.secretAccessor permission for the specific secret.
 Ensure your SFTP server's authorized_keys file for the target user contains the correct public key.
@@ -223,6 +228,7 @@ Key Format: Double-check that the private key stored in Secret Manager is in PEM
 Firewall Rules: Ensure your SFTP server's firewall allows incoming connections from Google Cloud IP ranges (or more specifically, Cloud Functions egress IPs if you have configured a VPC connector with static NAT).
 Ensure your SFTP server supports modern ciphers compatible.
 Looker Action Hub Secret: If you set LOOKER_ACTION_HUB_SECRET, ensure it matches exactly in both the Cloud Function environment variable and the Looker Action Hub configuration.
+
 # Contributing
 Contributions are welcome! Please feel free to submit pull requests or open issues for bugs, feature requests, or improvements.
 (Details on development setup, testing, and contribution guidelines can be added here if desired.)
