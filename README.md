@@ -123,7 +123,7 @@ You will deploy three separate Cloud Functions. Clone this repository and naviga
 *   `YOUR_FUNCTION_NAME`: A unique name for your Cloud Function (e.g., `looker-sftp-list`, `looker-sftp-form`, `looker-sftp-execute`).
 *   `YOUR_PROJECT_ID`: Your Google Cloud Project ID.
 *   `YOUR_REGION`: The GCP region for deployment (e.g., `us-central1`).
-*   `PYTHON_RUNTIME`: e.g., `python39`, `python310`, `python311`.
+*   `PYTHON_RUNTIME`: e.g., `python310`, `python311`, `python312`.
 
 ### A. `action_list` Function
 
