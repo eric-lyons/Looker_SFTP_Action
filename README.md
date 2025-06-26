@@ -162,10 +162,11 @@ gcloud functions deploy YOUR_ACTION_FORM_FUNCTION_NAME \
 ```
 ### C. action_execute Function
 This function handles the actual data transfer to SFTP.
+
+```bash
 # Navigate to the directory containing the action_execute function code
 # cd path/to/looker_sftp_action/action_execute_function_directory
 
-```bash
 gcloud functions deploy YOUR_ACTION_EXECUTE_FUNCTION_NAME \
   --project=YOUR_PROJECT_ID \
   --region=YOUR_REGION \
@@ -178,14 +179,14 @@ gcloud functions deploy YOUR_ACTION_EXECUTE_FUNCTION_NAME \
   # --set-env-vars=LOOKER_ACTION_HUB_SECRET="your-strong-secret-for-verification"
 ```
 
-# Grant the Cloud Function's service account permission to access the secret
-# 1. Find the service account for your deployed function:
-#    It's usually YOUR_PROJECT_ID@appspot.gserviceaccount.com (for older runtimes)
-#    or service-YOUR_PROJECT_NUMBER@gcf-admin-robot.iam.gserviceaccount.com (for newer runtimes)
-#    Check in GCP IAM or the function's details page.
-#    Alternatively, use:
-#    gcloud functions describe YOUR_ACTION_EXECUTE_FUNCTION_NAME --region YOUR_REGION --format 'value(serviceAccountEmail)'
-#    Let's call this FUNCTION_SERVICE_ACCOUNT_EMAIL
+### Grant the Cloud Function's service account permission to access the secret
+1. Find the service account for your deployed function:
+  It's usually YOUR_PROJECT_ID@appspot.gserviceaccount.com (for older runtimes)
+    or service-YOUR_PROJECT_NUMBER@gcf-admin-robot.iam.gserviceaccount.com (for newer runtimes)
+    Check in GCP IAM or the function's details page.
+    Alternatively, use:
+    gcloud functions describe YOUR_ACTION_EXECUTE_FUNCTION_NAME --region YOUR_REGION --format 'value(serviceAccountEmail)'
+    Let's call this FUNCTION_SERVICE_ACCOUNT_EMAIL
 
 # 2. Grant permission:
 
