@@ -107,7 +107,7 @@ This will generate `my_looker_sftp_key` (private key) and `my_looker_sftp_key.pu
 1.  Go to the [Secret Manager page](https://console.cloud.google.com/security/secret-manager) in the Google Cloud Console.
 2.  Click **"Create Secret"**.
 3.  **Name:** Enter a descriptive name (e.g., `looker-sftp-private-key`). Note this name.
-4.  **Secret value:** Paste the entire content of your PEM-formatted private key file (e.g., `my_looker_sftp_key`).
+4.  **Secret value:** Paste the entire content of your PEM-formatted private key file (e.g., `sftp`).
 5.  Leave other settings as default and click **"Create secret"**.
 6.  Once created, click on the secret name. You'll need its **Resource ID** (looks like `projects/YOUR_PROJECT_ID/secrets/YOUR_SECRET_NAME/versions/latest`). Copy this.
 
@@ -123,7 +123,7 @@ You will deploy three separate Cloud Functions. Clone this repository and naviga
 *   `YOUR_FUNCTION_NAME`: A unique name for your Cloud Function (e.g., `looker-sftp-list`, `looker-sftp-form`, `looker-sftp-execute`).
 *   `YOUR_PROJECT_ID`: Your Google Cloud Project ID.
 *   `YOUR_REGION`: The GCP region for deployment (e.g., `us-central1`).
-*   `PYTHON_RUNTIME`: e.g., `python310`, `python311`, `python312`.
+*   `PYTHON_RUNTIME`: e.g., `python311`, `python312`.
 
 ### A. `action_list` Function
 
@@ -166,6 +166,7 @@ This function handles the actual data transfer to SFTP.
 ```bash
 # Navigate to the directory containing the action_execute function code
 # cd path/to/looker_sftp_action/action_execute_function_directory
+# make surethe name of secret in Secret Manager matches sftp
 
 gcloud functions deploy YOUR_ACTION_EXECUTE_FUNCTION_NAME \
   --project=YOUR_PROJECT_ID \
@@ -174,7 +175,7 @@ gcloud functions deploy YOUR_ACTION_EXECUTE_FUNCTION_NAME \
   --trigger-http \
   --allow-unauthenticated \
   --entry-point=action_execute # Verify this entry point from the Python source
-  --set-env-vars=SFTP_SECRET_RESOURCE_ID="projects/YOUR_PROJECT_ID/secrets/YOUR_SECRET_NAME/versions/latest"
+  --set-secrets=sftp_pem=sftp:1
   # Optional: For request verification from Looker
   # --set-env-vars=LOOKER_ACTION_HUB_SECRET="your-strong-secret-for-verification"
 ```
