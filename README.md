@@ -115,16 +115,16 @@ This will generate `my_looker_sftp_key` (private key) and `my_looker_sftp_key.pu
 
 You will deploy three separate Cloud Functions. Clone this repository and navigate to the respective function directories for deployment.
 
-**Note on Entry Points:** The `--entry-point` flag in the `gcloud` commands below should match the main Python function defined in each respective `main.py` file within the Cloud Function's directory. For example, if your `action_list_function/main.py` defines `def my_list_handler(request):`, then your entry point is `my_list_handler`. The names `action_list`, `action_form`, and `action_execute_main` (or similar) are common conventions. **Please verify the exact entry point function names from the source code files.**
+**Note on Entry Points:** The `--entry-point` flag in the `gcloud` commands below should match the main Python function defined in each respective `main.py` file within the Cloud Function's directory. For example, if your `action_list_function/main.py` defines `def my_list_handler(request):`, then your entry point is `my_list_handler`. The names `action_list`, `action_form`, and `action_execute` (or similar) are common conventions. **Please verify the exact entry point function names from the source code files.**
 
-*(Assuming the Python files are structured with entry points named `action_list`, `action_form`, and `handle_execution` respectively, as per common Looker Action patterns. Adjust if your source code differs.)*
+*(Assuming the Python files are structured with entry points named `action_list`, `action_form`, and `action_execute` respectively, as per common Looker Action patterns. Adjust if your source code differs.)*
 
 **Parameters for `gcloud functions deploy`:**
 *   `export PROJECT_ID`: Your Google Cloud Project ID.
 *   `export YOUR_REGION=us-central1`: The GCP region for deployment (e.g., `us-central1`).
 *   `export PYTHON_RUNTIME=python3111`: e.g., `python311`, `python312`.
 *   `export PROJECT_NUMBER=$(gcloud projects describe YOUR_PROJECT_ID --format="value(projectNumber)")`
-*   export LOOKER_ACTION_HUB_SECRET` Your secret you generated which allows Looker to authenticate to the Cloud function. You will also place this in Looker when you add your action. 
+*   `export LOOKER_ACTION_HUB_SECRET` Your secret you generated which allows Looker to authenticate to the Cloud function. You will also place this in Looker when you add your action. 
   
 ### A. `action_list` Function
 
@@ -161,7 +161,7 @@ This function provides Looker with the form fields needed to configure the SFTP 
 gcloud functions deploy actionform \
   --project=YOUR_PROJECT_ID \
   --region=YOUR_REGION \
-  --runtime=PYTHON_RUNTIME \
+  --runtime=$PYTHON_RUNTIME \
   --trigger-http \
   --allow-unauthenticated \
   --set-env-vars=REGION=$REGION \
@@ -176,8 +176,8 @@ This function handles the actual data transfer to SFTP.
 
 ```bash
 # Navigate to the directory containing the action_execute function code
-# cd path/to/looker_sftp_action/action_execute_function_directory
-# make surethe name of secret in Secret Manager matches sftp
+# cd path/to/looker_sftp_action/
+# make surethe name of secret in Secret Manager matches sftp or update accordingly
 
 gcloud functions deploy actionexecute \
  --region=$REGION \
@@ -185,7 +185,7 @@ gcloud functions deploy actionexecute \
  --trigger-http \
  --entry-point=action_execute \
  --allow-unauthenticated \
- --runtime=python311 \
+ --runtime=$PYTHON_RUNTIME \
  --set-env-vars=REGION=$REGION \
  --set-env-vars=PROJECT_ID=$PROJECT_ID \
  --set-env-vars=LOOKER_ACTION_HUB_SECRET=$LOOKER_ACTION_HUB_SECRET \
