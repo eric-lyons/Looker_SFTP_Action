@@ -1,14 +1,15 @@
-
-import os
+from auth import authenticate
+import base64
 from flask import Response
 from icon import icon_data_uri
-from sftp import upload_file_sftp, get_cred_config
-import base64
-import tempfile
-import pandas as pd
-import zlib
 import io, zipfile, json
+import os
+import pandas as pd
 from pandas import ExcelWriter
+from sftp import upload_file_sftp, get_cred_config
+import tempfile
+import zlib
+
 
 # https://github.com/looker-open-source/actions/blob/master/docs/action_api.md#action-form-endpoint
 def action_form(request):
@@ -32,15 +33,21 @@ def action_form(request):
 
 def action_list(request):
     """Return action hub list endpoint data for action"""
+    project_number = os.environ.get("PROJECT_NUMBER")
+    region = os.environ.get("REGION")
 
+    form_url = f"https://actionform-{project_number}.{region}.run.app/action_form"
+    print(f"form url: {form_url}")
+    execute_url = f"https://actionexecute-{project_number}.{region}.run.app/action_execute"
+    print(f"execute url: {execute_url}")
     response = {
         'label': 'Secure SFTP',
         'integrations': [{
             'name': 'SecureSFTP',
             'label': 'SecureSFTP',
             "icon_data_uri": icon_data_uri,
-            'form_url': 'URL/action_form',
-            'url': 'URL/action_execute',
+            'form_url': form_url,
+            'url': execute_url,
             'supported_action_types': ['dashboard'],
             'supported_download_settings': ['url'],
             'supported_formats': ['csv_zip'],
@@ -257,6 +264,10 @@ def parse_port_string(port_str):
 
 # https://github.com/looker-open-source/actions/blob/master/docs/action_api.md#action-execute-endpoint
 def action_execute(request):
+    auth = authenticate(request)
+    if auth.status_code != 200:
+        return auth
+        
     try:
         try:
             request_json = request.get_json()
