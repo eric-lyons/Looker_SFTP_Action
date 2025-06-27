@@ -140,7 +140,12 @@ gcloud functions deploy YOUR_ACTION_LIST_FUNCTION_NAME \
   --runtime=PYTHON_RUNTIME \
   --trigger-http \
   --allow-unauthenticated \
-  --entry-point=action_list # Verify this entry point from the Python source
+  --set-env-vars=REGION=$REGION \
+  --set-env-vars=PROJECT_ID=$PROJECT_ID \
+  --set-env-vars=LOOKER_ACTION_HUB_SECRET=$LOOKER_ACTION_HUB_SECRET \
+  --set-env-vars=PROJECT_NUMBER=$PROJECT_NUMBER \
+  --entry-point=action_list
+# Verify this entry point from the Python source
 ```
 
 Make a note of the HTTPS Trigger URL for this function.
@@ -159,7 +164,12 @@ gcloud functions deploy YOUR_ACTION_FORM_FUNCTION_NAME \
   --runtime=PYTHON_RUNTIME \
   --trigger-http \
   --allow-unauthenticated \
-  --entry-point=action_form # Verify this entry point from the Python source
+  --set-env-vars=REGION=$REGION \
+  --set-env-vars=PROJECT_ID=$PROJECT_ID \
+  --set-env-vars=LOOKER_ACTION_HUB_SECRET=$LOOKER_ACTION_HUB_SECRET \
+  --set-env-vars=PROJECT_NUMBER=$PROJECT_NUMBER \
+  --entry-point=action_form
+# Verify this entry point from the Python source
 ```
 ### C. action_execute Function
 This function handles the actual data transfer to SFTP.
@@ -169,16 +179,21 @@ This function handles the actual data transfer to SFTP.
 # cd path/to/looker_sftp_action/action_execute_function_directory
 # make surethe name of secret in Secret Manager matches sftp
 
-gcloud functions deploy YOUR_ACTION_EXECUTE_FUNCTION_NAME \
-  --project=YOUR_PROJECT_ID \
-  --region=YOUR_REGION \
-  --runtime=PYTHON_RUNTIME \
-  --trigger-http \
-  --allow-unauthenticated \
-  --entry-point=action_execute # Verify this entry point from the Python source
-  --set-secrets=sftp_pem=sftp:1
-  # Optional: For request verification from Looker
-  # --set-env-vars=LOOKER_ACTION_HUB_SECRET="your-strong-secret-for-verification"
+gcloud functions deploy actionexecute \
+ --region=$REGION \
+ --project=$PROJECT_ID \
+ --trigger-http \
+ --entry-point=action_execute \
+ --allow-unauthenticated \
+ --runtime=python311 \
+ --set-env-vars=REGION=$REGION \
+ --set-env-vars=PROJECT_ID=$PROJECT_ID \
+ --set-env-vars=LOOKER_ACTION_HUB_SECRET=$LOOKER_ACTION_HUB_SECRET \
+ --set-env-vars=PROJECT_NUMBER=$PROJECT_NUMBER \
+ --set-secrets=sftp_pem=sftp:1 
+
+# Optional: For request verification from Looker
+# --set-env-vars=LOOKER_ACTION_HUB_SECRET="your-strong-secret-for-verification"
 ```
 
 ### Grant the Cloud Function's service account permission to access the secret
