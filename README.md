@@ -119,22 +119,22 @@ You will deploy three separate Cloud Functions. Clone this repository and naviga
 
 *(Assuming the Python files are structured with entry points named `action_list`, `action_form`, and `handle_execution` respectively, as per common Looker Action patterns. Adjust if your source code differs.)*
 
-**Common parameters for `gcloud functions deploy`:**
-*   `YOUR_FUNCTION_NAME`: A unique name for your Cloud Function (e.g., `looker-sftp-list`, `looker-sftp-form`, `looker-sftp-execute`).
+**Parameters for `gcloud functions deploy`:**
 *   `export PROJECT_ID`: Your Google Cloud Project ID.
 *   `export YOUR_REGION=us-central1`: The GCP region for deployment (e.g., `us-central1`).
 *   `export PYTHON_RUNTIME=python3111`: e.g., `python311`, `python312`.
 *   `export PROJECT_NUMBER=$(gcloud projects describe YOUR_PROJECT_ID --format="value(projectNumber)")`
-
+*   export LOOKER_ACTION_HUB_SECRET` Your secret you generated which allows Looker to authenticate to the Cloud function. You will also place this in Looker when you add your action. 
+  
 ### A. `action_list` Function
 
 This function tells Looker about the existence of your action.
 
 ```bash
 # Navigate to the directory containing the action_list function code
-# cd path/to/looker_sftp_action/action_list_function_directory
+# cd path/to/looker_sftp_action/
 
-gcloud functions deploy YOUR_ACTION_LIST_FUNCTION_NAME \
+gcloud functions deploy actionlist \
   --project=YOUR_PROJECT_ID \
   --region=YOUR_REGION \
   --runtime=PYTHON_RUNTIME \
@@ -156,9 +156,9 @@ This function provides Looker with the form fields needed to configure the SFTP 
 
 ```bash
 # Navigate to the directory containing the action_form function code
-# cd path/to/looker_sftp_action/action_form_function_directory
+# cd path/to/looker_sftp_action/
 
-gcloud functions deploy YOUR_ACTION_FORM_FUNCTION_NAME \
+gcloud functions deploy actionform \
   --project=YOUR_PROJECT_ID \
   --region=YOUR_REGION \
   --runtime=PYTHON_RUNTIME \
